@@ -3,11 +3,13 @@ Used for login remotely in another systems. This can be used for transfering fil
 
 # How to use 
 
-            To run it as a Server (or Receiver), execute command -
-                    python telnet.py -r
+         To run it as a Server (or Receiver), execute command -
+         
+                        python telnet.py -r
 
-To run it as a Client (or Sender), execute command -
-    python telnet.py -s 192.168.10.10 (server_ip)
+         To run it as a Client (or Sender), execute command -
 
-For help -
-    python telnet.py -h
+                        python telnet.py -s 192.168.10.10 (server_ip)
+
+         For help -
+                        python telnet.py -h
