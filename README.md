@@ -11,5 +11,9 @@ Used for login remotely in another systems. This can be used for transfering fil
 
                         python telnet.py -s 192.168.10.10 (server_ip)
 
+         Login credentials
+                        Username = root
+                        Password = redhat
+
          For help -
                         python telnet.py -h
