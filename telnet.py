@@ -94,21 +94,20 @@ if args.getfile:
 	x = create_socket()
 	name,ip = get_ip()
 	x.bind((ip,9898))
+	file_des = x.recvfrom(100)
 	word_len = int(x.recvfrom(100)[0])
-	file_des = x.recvfrom(100)[0]
-	data = x.recvfrom(word_len)
 	try:
-		f=open("{}".format(file_des),"w")
-		f.write(data[0])
-		f.close()
-		x.sendto("Done",data[1])
+		f=open("{}".format(file_des[0]),"w")
+		x.sendto("Done",file_des[1])
 	except IOError:
-		x.sendto("Error",data[1])
+		x.sendto("Error",file_des[1])
 		file_name = x.recvfrom(100)[0]
-		file_des = file_des+file_name
+		file_des = file_des[0]+file_name
 		f = open("{}".format(file_des),"w")
-		f.write(data[0])
-		f.close()
+	data = x.recvfrom(word_len)
+	f.write(data[0])
+	f.close()
+
 #file sending
 
 file_path = args.file
@@ -118,16 +117,22 @@ if args.file:
 	word_len = commands.getoutput("cat {} | wc -c".format(file_path))
 	ip = args.IP
 	file_des = args.destination
-	x.sendto(word_len,(ip,9898))
 	x.sendto(file_des,(ip,9898))
-	f=open("{}".format(file_path),"r")
-	data = f.read()
-	x.sendto(data,(ip,9898))
-	f.close()
+	x.sendto(word_len,(ip,9898))
 	err = x.recvfrom(30)
 	if err == "Error":
 		path = file_path.split('/')
 		file_name = path[-1]
 		x.sendto(file_name,(ip,9898))
 	else :
-		None	
+		pass
+
+
+	f=open("{}".format(file_path),"r")
+	data = f.read()
+	x.sendto(data,(ip,9898))	
+
+	f.close()
+
+
+
