@@ -4,26 +4,37 @@ import os
 import getpass
 import argparse as ap
 import socket
-import commands
+import commands,sys
 
 parser = ap.ArgumentParser()
 parser.add_argument("-s","--send",help = "used to send or connect another system on network")
 
-parser.add_argument("-r","--receive",help = "start receiving connection",action = "store_true")
+parser.add_argument("-r","--receive",help = "start receiving connection", action = "store_true")
 
 parser.add_argument("-f","--file",help = "used to send file")
+
+parser.add_argument("-g","--getfile",help = "used to get file", action = "store_true")
+
+parser.add_argument("-i","--IP",help = "IP of file receiver")
+
+parser.add_argument("-d","--destination",help = "Destination path for file")
 
 args = parser.parse_args()
 
 def create_socket():
 	return socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 
+def get_ip():
+	host_name = socket.gethostname()
+	ip = socket.gethostbyname(host_name)
+	return host_name,ip
+
 ip=args.send #when we are sender and ip is receiver ip
 
+#Receiver or Server
 if args.receive:
 	x = create_socket()
-	host_name = socket.gethostname()
-	rip = socket.gethostbyname(host_name)
+	host_name,rip = get_ip()
 	x.bind((rip,9898))
 	u_name = x.recvfrom(100)
 	u_pass = x.recvfrom(100)
@@ -50,6 +61,7 @@ if args.receive:
 	else:
 		x.sendto("Unable to connect. Try again!",u_name[1])
 
+#sender or client
 elif args.send:
 	x = create_socket()
 	u_name = raw_input("Username: ")
@@ -76,3 +88,46 @@ elif args.send:
                 if cur_dir == "root":
 			cur_dir = "~"
 		"""
+
+#file receiving
+if args.getfile:
+	x = create_socket()
+	name,ip = get_ip()
+	x.bind((ip,9898))
+	word_len = int(x.recvfrom(100)[0])
+	file_des = x.recvfrom(100)[0]
+	data = x.recvfrom(word_len)
+	try:
+		f=open("{}".format(file_des),"w")
+		f.write(data[0])
+		f.close()
+		x.sendto("Done",data[1])
+	except IOError:
+		x.sendto("Error",data[1])
+		file_name = x.recvfrom(100)[0]
+		file_des = file_des+file_name
+		f = open("{}".format(file_des),"w")
+		f.write(data[0])
+		f.close()
+#file sending
+
+file_path = args.file
+
+if args.file:
+	x = create_socket()
+	word_len = commands.getoutput("cat {} | wc -c".format(file_path))
+	ip = args.IP
+	file_des = args.destination
+	x.sendto(word_len,(ip,9898))
+	x.sendto(file_des,(ip,9898))
+	f=open("{}".format(file_path),"r")
+	data = f.read()
+	x.sendto(data,(ip,9898))
+	f.close()
+	err = x.recvfrom(30)
+	if err == "Error":
+		path = file_path.split('/')
+		file_name = path[-1]
+		x.sendto(file_name,(ip,9898))
+	else :
+		None	
