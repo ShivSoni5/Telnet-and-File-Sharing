@@ -29,7 +29,6 @@ def get_ip():
 	ip = socket.gethostbyname(host_name)
 	return host_name,ip
 
-ip=args.send #when we are sender and ip is receiver ip
 
 try :
 
@@ -60,6 +59,7 @@ try :
 		else:
 			x.sendto("Unable to connect. Try again!",u_name[1])
 
+	ip=args.send #when we are sender and ip is receiver ip
 	#sender or client
 	elif args.send:
 		x = create_socket()
