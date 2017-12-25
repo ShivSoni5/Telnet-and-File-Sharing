@@ -59,8 +59,8 @@ try :
 		else:
 			x.sendto("Unable to connect. Try again!",u_name[1])
 
-	ip=args.send #when we are sender and ip is receiver ip
 	#sender or client
+	ip=args.send #when we are sender and ip is receiver ip
 	elif args.send:
 		x = create_socket()
 		u_name = raw_input("Username: ")
