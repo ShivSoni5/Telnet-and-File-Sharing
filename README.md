@@ -17,3 +17,14 @@ Used for login remotely in another systems. This can be used for transfering fil
 
          For help -
                         python telnet.py -h
+                       
+                  
+# File Sharing
+
+         Receiver Command -
+                           
+                        python telnet.py -g
+                        
+         Sender Command -
+                           
+                        python telnet.py -f /file_path/file_name -i 192.168.10.10 -d /file_destination_path/file_name
