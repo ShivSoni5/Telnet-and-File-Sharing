@@ -60,8 +60,9 @@ try :
 			x.sendto("Unable to connect. Try again!",u_name[1])
 
 	#sender or client
-	ip=args.send #when we are sender and ip is receiver ip
+	
 	elif args.send:
+		ip=args.send #when we are sender and ip is receiver ip
 		x = create_socket()
 		u_name = raw_input("Username: ")
 		u_pass = getpass.getpass() 	
@@ -106,9 +107,9 @@ try :
 
 	#file sending
 
-	file_path = args.file
-
+	
 	if args.file:
+		file_path = args.file
 		x = create_socket()
 		word_len = commands.getoutput("cat {} | wc -c".format(file_path))
 		ip = args.IP
